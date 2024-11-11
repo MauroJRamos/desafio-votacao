@@ -6,6 +6,7 @@ import com.votacao.assembleia.enums.StatusSessao;
 import com.votacao.assembleia.model.Pauta;
 
 import com.votacao.assembleia.repository.PautaRepository;
+import com.votacao.assembleia.service.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +34,10 @@ public class PautaService {
     @Transactional
     public Pauta abrirSessao(Long pautaId, Integer duracaoMinutos) {
         Pauta pauta = pautaRepository.findById(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pauta não encontrada"));
 
         if (pauta.getStatusSessao() != StatusSessao.NAO_INICIADA) {
-            throw new RuntimeException("Sessão já foi iniciada ou está encerrada");
+            throw new ResourceNotFoundException("Sessão já foi iniciada ou está encerrada");
         }
 
         int duracao = duracaoMinutos != null ? duracaoMinutos : 1;
@@ -52,7 +53,7 @@ public class PautaService {
     @Transactional(readOnly = true)
     public ResultadoVotacaoDTO contabilizarVotos(Long pautaId) {
         Pauta pauta = pautaRepository.findById(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pauta não encontrada"));
 
         if (pauta.getStatusSessao() != StatusSessao.ENCERRADA &&
                 LocalDateTime.now().isAfter(pauta.getFimSessao())) {

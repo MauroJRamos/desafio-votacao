@@ -2,6 +2,7 @@ package com.votacao.assembleia.service;
 
 import com.votacao.assembleia.dto.ResultadoVotacaoDTO;
 import com.votacao.assembleia.dto.VotoRequestDTO;
+import com.votacao.assembleia.service.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import com.votacao.assembleia.model.Pauta;
 import com.votacao.assembleia.model.Voto;
@@ -28,18 +29,18 @@ public class VotoService {
     @Transactional
     public Voto registrarVoto(Long pautaId, VotoRequestDTO request) {
         Pauta pauta = pautaRepository.findById(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pauta não encontrada"));
 
         if (pauta.getStatusSessao() != StatusSessao.EM_ANDAMENTO) {
-            throw new RuntimeException("Sessão de votação não está aberta");
+            throw new ResourceNotFoundException("Sessão de votação não está aberta");
         }
 
         if (LocalDateTime.now().isAfter(pauta.getFimSessao())) {
-            throw new RuntimeException("Sessão de votação encerrada");
+            throw new ResourceNotFoundException("Sessão de votação encerrada");
         }
 
         if (votoRepository.existsByPautaIdAndAssociadoId(pautaId, request.getAssociadoId())) {
-            throw new RuntimeException("Associado já votou nesta pauta");
+            throw new ResourceNotFoundException("Associado já votou nesta pauta");
         }
 
         Voto voto = new Voto();
@@ -54,7 +55,7 @@ public class VotoService {
     @Transactional(readOnly = true)
     public ResultadoVotacaoDTO contabilizarVotos(Long pautaId) {
         Pauta pauta = pautaRepository.findById(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pauta não encontrada"));
 
         List<Voto> votos = votoRepository.findByPautaId(pautaId);
 
