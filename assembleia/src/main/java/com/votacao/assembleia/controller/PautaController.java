@@ -35,6 +35,15 @@ public class PautaController {
         return ResponseEntity.ok(pautaService.criarPauta(request));
     }
 
+    @Operation(
+            summary = "Abrir sessão de votação",
+            description = "Abre uma sessão de votação para uma pauta específica"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sessão aberta com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pauta não encontrada"),
+            @ApiResponse(responseCode = "400", description = "Sessão já aberta ou outros erros")
+    })
     @PostMapping("/{id}/sessao")
     public ResponseEntity<Pauta> abrirSessao(
             @PathVariable Long id,
@@ -42,6 +51,14 @@ public class PautaController {
         return ResponseEntity.ok(pautaService.abrirSessao(id, duracaoMinutos));
     }
 
+    @Operation(
+            summary = "Obter resultado da votação",
+            description = "Retorna o resultado final da votação de uma pauta"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Resultado obtido com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pauta não encontrada")
+    })
     @GetMapping("/{id}/resultado")
     public ResponseEntity<ResultadoVotacaoDTO> resultado(@PathVariable Long id) {
         return ResponseEntity.ok(pautaService.contabilizarVotos(id));
