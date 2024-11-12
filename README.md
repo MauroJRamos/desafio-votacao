@@ -21,6 +21,8 @@ Este projeto foi desenvolvido utilizando:
 ```sql
 CREATE DATABASE db_assembleia;
 ```
+![image](https://github.com/user-attachments/assets/05d4e15d-de1b-49b4-983f-817f4873d379)
+
 
 ## 💻 Executando o Projeto
 
