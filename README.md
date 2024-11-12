@@ -1,4 +1,4 @@
-# Projeto Java Spring Boot
+# Projeto Assembleia
 
 Este projeto foi desenvolvido utilizando:
 - Java 17
@@ -21,8 +21,6 @@ Este projeto foi desenvolvido utilizando:
 ```sql
 CREATE DATABASE db_assembleia;
 ```
-![image](https://github.com/user-attachments/assets/e1e94748-1534-4e83-8d77-b77c837baa35)
-
 
 ## 💻 Executando o Projeto
 
@@ -40,8 +38,20 @@ Para executar o projeto utilizando o MariaDB:
 ```properties
 spring.profiles.active=${APP_PROFILE:dev}
 ```
-2. Certifique-se que o banco `db_assembleia` foi criado
-3. Execute o projeto
+
+2. No arquivo `application-dev.properties`, configure:
+```properties
+# Configurações do Banco de Dados
+spring.datasource.url=jdbc:mariadb://localhost:3306/db_assembleia
+spring.datasource.username=root
+spring.datasource.password=123456
+
+# Configuração do Hibernate
+spring.jpa.hibernate.ddl-auto=update
+```
+
+3. Certifique-se que o banco `db_assembleia` foi criado
+4. Execute o projeto
 
 ## 📚 Documentação API
 
@@ -59,10 +69,16 @@ O projeto possui dois perfis de configuração:
 2. **dev**: Utiliza MariaDB
    - Ambiente de desenvolvimento
    - Requer banco MariaDB configurado
+   - Gera automaticamente as tabelas através do Hibernate
+   - Configurações padrão:
+     - URL: jdbc:mariadb://localhost:3306/db_assembleia
+     - Usuário: root
+     - Senha: 123456
 
 ## 📝 Notas Importantes
 
 - Certifique-se de ter todas as dependências instaladas antes de executar o projeto
 - Verifique se as portas necessárias (8080 para a aplicação, 3306 para MariaDB) estão disponíveis
 - Para alternar entre os perfis, modifique a configuração `spring.profiles.active` conforme necessário
-
+- A configuração `spring.jpa.hibernate.ddl-auto=update` no perfil dev permite que o Hibernate atualize automaticamente o esquema do banco de dados conforme as entidades da aplicação
+- Caso necessário, ajuste as credenciais do banco de dados no arquivo `application-dev.properties` de acordo com sua configuração local
